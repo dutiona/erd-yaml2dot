@@ -22,6 +22,12 @@ entities:
     primary key:
       - Source ID
 
+  "Source2":
+    fields:
+      - Alt Price
+      - Alt Homepage
+      - Alt Manufacturer
+
   "Location":
     fields:
       - Location ID
@@ -78,12 +84,14 @@ entities:
     primary key:
       - Book ID
 
+  "Empty": {}
+
 relationships:
   "is manufactured by":
-    lhs: Item
-    lhs-card: 0,*
-    rhs: Source
-    rhs-card: 0,*
+    entities:
+      "Item": 0,*
+      "Source": 0,*
+      "Source2": 0,*
     fields:
       - date on market
     note:

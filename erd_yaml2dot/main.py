@@ -1,5 +1,5 @@
 import argparse
-from erd_yaml2dot.core import load_yaml_file, generate_dot_diagram
+from erd_yaml2dot.core import load_yaml_file  # , generate_dot_diagram
 
 
 def main():
@@ -11,8 +11,8 @@ def main():
   args = parser.parse_args()
 
   yaml_data = load_yaml_file(args.input_yaml)
-  dot_diagram = generate_dot_diagram(yaml_data)
-  dot_diagram.render(args.output, view=True)
+  # dot_diagram = generate_dot_diagram(yaml_data)
+  # dot_diagram.render(args.output, view=True)
 
 
 if __name__ == '__main__':

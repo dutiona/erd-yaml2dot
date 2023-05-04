@@ -6,22 +6,22 @@ entities:
       - field1
       - field2
       - field3
-    primary key:
+    primary_key:
       - field1
-      - field2
+      - field8
 
   "Entity2": {}
 
   "Entity3":
     fields:
       - field1
-    primary key:
+    primary_key:
       - field1
 
   "Entity4":
     fields:
       - field1
-    primary key:
+    primary_key:
       - field1
 
 relationships:

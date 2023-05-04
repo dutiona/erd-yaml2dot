@@ -1,0 +1,63 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+
+# This schema does not validate:
+#  - in entities:
+#    - that the fields in primary_key is properly declared (in fields)
+#    - fields name are unique
+#  - in relationships:
+#    - that the entities referenced in relationships exists in entities
+#    - that the additional fields are unique
+# This is not possible with a schema.
+# All those constraints are checked in Python instead.
+
+type: object
+required: [title, entities, relationships]
+properties:
+  title:
+    type: string
+
+  entities:
+    type: object
+    additionalProperties:
+      type: object
+      properties:
+        fields:
+          type: array
+          items:
+            type: string
+        primary_key:
+          type: array
+          items:
+            type: string
+      required: []
+      dependencies:
+        primary_key:
+          properties:
+            fields:
+              minItems: 1
+
+  relationships:
+    type: object
+    additionalProperties:
+      type: object
+      required: [entities]
+      properties:
+        entities:
+          type: object
+          minProperties: 1
+          additionalProperties:
+            type: string
+            enum: ["0,1", "1,1", "0,*", "1,*"]
+        fields:
+          type: array
+          items:
+            type: string
+        note:
+          type: array
+          items:
+            type: string
+      dependencies:
+        entities:
+          properties:
+            fields:
+              minItems: 1

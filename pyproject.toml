@@ -1,0 +1,36 @@
+[tool.poetry]
+name = "erd-yaml2dot"
+version = "0.1.0"
+description = "Generate DOT diagrams from YAML files using Python and Graphviz"
+license = "MIT"
+authors = ["Michaël Roynard <michaelroynard@gmail.com>"]
+maintainers = ["Michaël Roynard <michaelroynard@gmail.com>"]
+readme = "README.md"
+# homepage = "https://dutiona.github.io/erd-yaml2dot/"
+documentation = "https://dutiona.github.io/erd-yaml2dot/"
+repository = "https://github.com/dutiona/erd-yaml2dot/"
+keywords = ["yaml", "dot", "erd", "graphviz"]
+packages = [{ include = "erd_yaml2dot" }]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+graphviz = "^0.20.1"
+PyYAML = "^6.0"
+argparse = "^1.4.0"
+
+[tool.poetry.group.test.dependencies]
+pytest = "*"
+
+[tool.poetry.group.dev.dependencies]
+
+[tool.poetry.group.docs.dependencies]
+mkdocs = "*"
+sphinx = "^6.2.0"
+sphinx-rtd-theme = "^1.2.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+erd-yaml2dot = "erd_yaml2dot.main:main"

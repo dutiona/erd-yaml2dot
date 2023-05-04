@@ -1,0 +1,45 @@
+title: Example Title
+
+entities:
+  "Entity1":
+    fields:
+      - field1
+      - field2
+      - field3
+    primary key:
+      - field1
+      - field2
+
+  "Entity2": {}
+
+  "Entity3":
+    fields:
+      - field1
+    primary key:
+      - field1
+
+  "Entity4":
+    fields:
+      - field1
+    primary key:
+      - field1
+
+relationships:
+  "relationship 1":
+    entities:
+      "Entity1": 0,*
+      "Entity2": 0,*
+      "Entity3": 0,*
+    fields:
+      - field 1
+    note:
+      - note 1
+
+  "relationship2":
+    entities:
+      "Entity1": 0,*
+
+  "relationship3":
+    entities:
+      "Entity3": 0,*
+      "Entity4": 0,*

@@ -1,0 +1,122 @@
+title: Test ER Diagram from YAML to GraphVIZ
+
+entities:
+  "Item":
+    fields:
+      - Item ID
+      - SimpleItem
+      - Bar Code
+      - Name
+      - Amount
+      - Owner
+      - Comment
+    primary key:
+      - Item ID
+
+  "Source":
+    fields:
+      - Source ID
+      - Price
+      - Homepage
+      - Manufacturer
+    primary key:
+      - Source ID
+
+  "Location":
+    fields:
+      - Location ID
+      - GPS Coordinates
+      - Name
+      - Room
+      - Locker
+    primary key:
+      - Location ID
+
+  "Lending":
+    fields:
+      - Lending ID
+      - Borrowed by
+      - Borrowed on
+      - Returned on
+    primary key:
+      - Lending ID
+
+  "Reminder":
+    fields:
+      - Reminder ID
+      - Start Date
+      - Repeat Interval
+      - End Date
+      - Active
+      - Action
+      - Email
+      - Phone
+      - Message
+    primary key:
+      - Reminder ID
+
+  "Attachment":
+    fields:
+      - Attachment ID
+      - File
+      - External URL
+      - Private
+    primary key:
+      - Attachment ID
+
+  "Book":
+    fields:
+      - Book ID
+      - Subtitle
+      - Author
+      - Publisher
+      - Paperback
+      - Language
+      - Review
+      - Summary
+      - About the Author
+    primary key:
+      - Book ID
+
+relationships:
+  "is manufactured by":
+    lhs: Item
+    lhs-card: 0,*
+    rhs: Source
+    rhs-card: 0,*
+    fields:
+      - date on market
+    note:
+      - Smoking note
+
+  "is stored at":
+    lhs: Item
+    lhs-card: 1,1
+    rhs: Location
+    rhs-card: 1,1
+
+  "is lent to":
+    lhs: Item
+    lhs-card: 0,1
+    rhs: Lending
+    rhs-card: 0,*
+    fields:
+      - lending_date
+
+  "is attached to":
+    lhs: Item
+    lhs-card: 0,*
+    rhs: Attachment
+    rhs-card: 0,*
+
+  "remind borrower":
+    lhs: Reminder
+    lhs-card: 1,1
+    rhs: Lending
+    rhs-card: 1,1
+
+  "item is a book":
+    lhs: Book
+    lhs-card: 1,1
+    rhs: Item
+    rhs-card: 1,1

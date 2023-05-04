@@ -1,0 +1,19 @@
+name: "Grey"
+
+style:
+  entities:
+    shape: "box"
+    fontsize: 12
+    fontname: "Courier"
+    color: "black"
+    style: "filled"
+    fillcolor: "lightgrey"
+    title:
+      bgcolor: "darkgrey"
+      #fontsize: 12
+      #fontname: "Courier"
+      #color: "black"
+      bold: true
+      underlined: true
+      italic: false
+    fields:

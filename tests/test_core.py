@@ -1,40 +1,19 @@
 import os
-import yaml
-from erd_yaml2dot.core import load_yaml_file  # , generate_dot_diagram
+from erd_yaml2dot.core import load_yaml_file, render_graph, validate_and_convert_yaml_to_dot
+import importlib.resources
 
 
-def test_load_yaml_file():
-  test_file = 'test.yaml'
-  test_data = {
-      'nodes': {
-          'A': {'label': 'Node A'},
-          'B': {'label': 'Node B'},
-      },
-      'edges': [
-          {'from': 'A', 'to': 'B'}
-      ]
-  }
-
-  with open(test_file, 'w') as file:
-    yaml.dump(test_data, file)
-
-  loaded_data = load_yaml_file(test_file)
-  os.remove(test_file)
-  assert loaded_data == test_data
+def load_erd_test_file():
+  return load_yaml_file(importlib.resources.open_text('tests.resources', 'test_diagram.yaml'))
 
 
-# def test_generate_dot_diagram():
-#  yaml_data = {
-#      'nodes': {
-#          'A': {'label': 'Node A'},
-#          'B': {'label': 'Node B'},
-#      },
-#      'edges': [
-#          {'from': 'A', 'to': 'B'}
-#      ]
-#  }
-#
-#  dot_diagram = generate_dot_diagram(yaml_data)
-#  assert 'Node A' in str(dot_diagram)
-#  assert 'Node B' in str(dot_diagram)
-#  assert 'A -> B' in str(dot_diagram)
+def test_render():
+  import platform
+  if platform.system() == "Windows":
+    import os
+    os.environ["PATH"] += os.pathsep + 'C:/Program Files/Graphviz/bin'
+
+  graph = validate_and_convert_yaml_to_dot(
+    importlib.resources.open_text('tests.resources', 'test_diagram.yaml'),
+    importlib.resources.open_text("erd_yaml2dot.resources.styles", "default.yaml"))
+  render_graph(graph, basename="test")

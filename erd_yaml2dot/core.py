@@ -1,8 +1,10 @@
 import yaml
 import sys
 import re
-from graphviz import Digraph
-from erd_yaml2dot.validate import validate_erd_schema
+import importlib.resources
+import graphviz
+from erd_yaml2dot.validate import validate_erd_schema, validate_style_schema
+from erd_yaml2dot.format import format_label_entity_for_dot_html, format_label_relationship_for_dot_html, format_card
 from pprint import pprint
 
 
@@ -11,10 +13,8 @@ def eprint(*args, **kwargs):
   error = True
 
 
-def load_yaml_file(file_path):
-  with open(file_path, 'r') as file:
-    data = yaml.safe_load(file)
-  return data
+def load_yaml_file(file_stream):
+  return yaml.safe_load(file_stream)
 
 
 def merge_dict(input, override):
@@ -44,21 +44,17 @@ def expand_style_yaml_data(yaml_data):
 
     # for nested title, fields, note
     for nested_rule_name, nested_rule_content in rule_content.items():
-      if nested_rule_name in ['title', 'field', 'note'] and 'extends' in nested_rule_content:
+      if nested_rule_name in ['title', 'field', 'note', 'primary_key'] and 'extends' in nested_rule_content:
         style_to_override = nested_rule_content.pop('extends')
         nested_rule_content = merge_dict(styles_to_expand[style_to_override], nested_rule_content)
         rule_content[nested_rule_name] = nested_rule_content
     yaml_proper['style'][rule_name] = rule_content
 
-  print("\nYAML PROPER\n")
-  pprint(yaml_proper)
-  print("\nEND YAML PROPER\n")
-
   return yaml_proper
 
 
-def load_style(file_path):
-  return expand_style_yaml_data(load_yaml_file(file_path))
+def load_style(file_stream):
+  return expand_style_yaml_data(load_yaml_file(file_stream))
 
 
 def parse_card(card_str):
@@ -72,17 +68,94 @@ def parse_card(card_str):
   }
 
 
-def convert_yaml_to_dot(yaml_to_convert):
-  # TODO: construct Digraph with graphviz directly instead of emitting dot source code
-  pass
+def convert_yaml_to_dot(erd_yaml_data, layout, style_yaml_data, html=True):
+  graph = graphviz.Digraph(name="ER",
+                           engine=layout,
+                           renderer="cairo",
+                           formatter="cairo",
+                           encoding="utf-8")
+
+  graph.attr(beautify="true",
+             overlap="false",
+             splines="true",
+             rankdir="TB")
+
+  # entities
+  graph.attr('node',
+             shape=style_yaml_data['entity']['shape'],
+             fontname=style_yaml_data['entity']['fontname'],
+             fontsize=str(style_yaml_data['entity']['fontsize']),
+             fillcolor=style_yaml_data['entity']['fillcolor'],
+             style=style_yaml_data['entity']['style'])
+
+  for entity_name, entity_content in erd_yaml_data['entities'].items():
+    graph.node(entity_name, label="<\n{}\n>".format(format_label_entity_for_dot_html(
+      entity_name, entity_content, style_yaml_data['entity'])))
+
+  # relationships
+  graph.attr('node',
+             shape=style_yaml_data['relationship']['shape'],
+             fontname=style_yaml_data['relationship']['fontname'],
+             fontsize=str(style_yaml_data['relationship']['fontsize']),
+             fillcolor=style_yaml_data['relationship']['fillcolor'],
+             style=style_yaml_data['relationship']['style'])
+  graph.attr('edge',
+             fontname=style_yaml_data['relationship']['fontname'],
+             fontsize=str(style_yaml_data['relationship']['fontsize']),
+             color=style_yaml_data['relationship']['color']
+             )
+
+  for relationship_name, relationship_content in erd_yaml_data['relationships'].items():
+    graph.node(relationship_name, label="<\n{}\n>".format(format_label_relationship_for_dot_html(
+      relationship_name, relationship_content, style_yaml_data['relationship'])))
+
+  for relationship_name, relationship_content in erd_yaml_data['relationships'].items():
+      # switch case for self relationships
+    if len(relationship_content['entities'].keys()) == 1:
+      self_lined_entity, self_lined_cardinality = list(relationship_content['entities'].items())[0]
+      card = parse_card(self_lined_cardinality)
+
+      graph.edge(self_lined_entity, relationship_name,
+                 label=format_card(card['min'], card['max']),
+                 arrowhead="none",
+                 arrowtail="none",
+                 arrowsize="2")
+      graph.edge(relationship_name, self_lined_entity,
+                 label=format_card(card['min'], card['max']),
+                 arrowhead="none",
+                 arrowtail="none",
+                 arrowsize="2")
+    else:
+      for linked_entity, cardinality in relationship_content['entities'].items():
+        card = parse_card(cardinality)
+        graph.edge(linked_entity, relationship_name,
+                   label=format_card(card['min'], card['max']),
+                   arrowhead="none",
+                   arrowtail="none",
+                   arrowsize="2")
+
+  # TODO notes & cluster
+
+  return graph
 
 
-def validate_and_convert_yaml_to_dot(path_to_yaml_file, html=True, style="default.yaml"):
-  yaml_data = load_yaml_file(path_to_yaml_file)
-  valid, validation_errors = validate_erd_schema(yaml_data)
+def validate_and_convert_yaml_to_dot(input_stream, style_stream, layout="dot", html=True):
+  erd_yaml_data = load_yaml_file(input_stream)
+  valid, validation_errors = validate_erd_schema(erd_yaml_data)
   if not valid:
     eprint("\n".join(validation_errors))
     return None
-  else:
-    # TODO: handle style
-    return convert_yaml_to_dot(path_to_yaml_file)
+
+  style_yaml_data = load_style(style_stream)
+  valid, validation_errors = validate_style_schema(style_yaml_data)
+
+  if not valid:
+    eprint("\n".join(validation_errors))
+    return None
+
+  return convert_yaml_to_dot(erd_yaml_data, layout, style_yaml_data['style'], html=html)
+
+
+def render_graph(graph, basename, format=('png', 'svg', 'pdf')):
+  for f in format:
+    graph.render(format=f, outfile=basename + "." + f)

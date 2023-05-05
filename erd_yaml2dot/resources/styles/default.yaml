@@ -1,19 +1,40 @@
-name: "Grey"
+name: "Default" # Grey
+
+.default-style:
+  shape: "box"
+  fontsize: 12
+  fontname: "Courier"
+  align: "center"
+  color: "black"
+  style: "filled"
+  fillcolor: "lightgrey"
+  bold: false
+  underlined: false
+  italic: false
 
 style:
-  entities:
-    shape: "box"
-    fontsize: 12
-    fontname: "Courier"
-    color: "black"
-    style: "filled"
-    fillcolor: "lightgrey"
+  entity:
+    extends: .default-style
     title:
+      extends: .default-style
       bgcolor: "darkgrey"
-      #fontsize: 12
-      #fontname: "Courier"
-      #color: "black"
       bold: true
       underlined: true
+    field:
+      extends: .default-style
+      align: "left"
+
+  relationship:
+    extends: .default-style
+    shape: "oval"
+    fillcolor: "grey80"
+    title:
+      extends: .default-style
+      bold: true
+    field:
+      extends: .default-style
+      bgcolor: "grey95"
+    note:
+      extends: .default-style
+      bgcolor: "none"
       italic: false
-    fields:

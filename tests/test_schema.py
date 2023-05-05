@@ -1,17 +1,31 @@
-import yaml
-from erd_yaml2dot.validate import validate_schema
+from erd_yaml2dot.validate import validate_erd_schema, validate_style_schema
+from erd_yaml2dot.core import load_style, load_yaml_file
 import importlib.resources
 
 
-def load_test_file():
-  with importlib.resources.open_text('tests.resources', 'test_diagram.yaml') as file:
-    return yaml.safe_load(file)
+def load_erd_test_file():
+  return load_yaml_file(importlib.resources.path('tests.resources', 'test_diagram.yaml'))
 
 
-def test_validate_schema():
+def load_style_test_file():
+  return load_style(importlib.resources.path('erd_yaml2dot.resources.styles', 'default.yaml'))
 
-  yaml_data = load_test_file()
-  valid, errors = validate_schema(yaml_data)
+
+def test_validate_erd_schema():
+  yaml_data = load_erd_test_file()
+  valid, errors = validate_erd_schema(yaml_data)
+  if not valid:
+    print("\n")
+    print(errors)
+
+  assert valid
+  assert len(errors) == 0
+
+
+def test_validate_style_schema():
+
+  yaml_style_data = load_style_test_file()
+  valid, errors = validate_style_schema(yaml_style_data)
   if not valid:
     print("\n")
     print(errors)

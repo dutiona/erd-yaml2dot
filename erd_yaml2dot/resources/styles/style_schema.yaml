@@ -1,0 +1,101 @@
+$schema: "http://json-schema.org/draft-07/schema#"
+
+type: object
+properties:
+  name:
+    type: string
+  .default-style:
+    $ref: "#/definitions/style-properties"
+  style:
+    type: object
+    properties:
+      entity:
+        type: object
+        allOf:
+          - $ref: "#/definitions/style-properties"
+          - properties:
+              extends:
+                type: string
+        properties:
+          extends:
+            const: .default-style
+          title:
+            allOf:
+              - $ref: "#/definitions/style-properties"
+              - properties:
+                  extends:
+                    type: string
+          field:
+            allOf:
+              - $ref: "#/definitions/style-properties"
+              - properties:
+                  extends:
+                    type: string
+      relationship:
+        type: object
+        allOf:
+          - $ref: "#/definitions/style-properties"
+          - properties:
+              extends:
+                type: string
+        properties:
+          extends:
+            type: string
+          title:
+            allOf:
+              - $ref: "#/definitions/style-properties"
+              - properties:
+                  extends:
+                    type: string
+          field:
+            allOf:
+              - $ref: "#/definitions/style-properties"
+              - properties:
+                  extends:
+                    type: string
+          note:
+            type: object
+            allOf:
+              - $ref: "#/definitions/style-properties"
+              - properties:
+                  extends:
+                    type: string
+required:
+  - name
+  - style
+
+definitions:
+  style-properties:
+    type: object
+    properties:
+      shape:
+        type: string
+      fontsize:
+        type: integer
+      fontname:
+        type: string
+      align:
+        type: string
+      color:
+        type: string
+      style:
+        type: string
+      fillcolor:
+        type: string
+      bold:
+        type: boolean
+      underlined:
+        type: boolean
+      italic:
+        type: boolean
+    required:
+      - shape
+      - fontsize
+      - fontname
+      - align
+      - color
+      - style
+      - fillcolor
+      - bold
+      - underlined
+      - italic

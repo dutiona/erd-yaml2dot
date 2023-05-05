@@ -1,9 +1,10 @@
 import yaml
 import jsonschema
 import importlib.resources
+# from pprint import pprint
 
 
-def load_schema():
+def load_erd_schema():
   with importlib.resources.open_text('erd_yaml2dot.resources', 'erd_schema.yaml') as file:
     return yaml.safe_load(file)
 
@@ -101,11 +102,11 @@ def validate_relationships(yaml_to_validate):
   return validation_errors
 
 
-def validate_schema(yaml_to_validate):
+def validate_erd_schema(yaml_to_validate):
   valid = True
   validation_errors = []
 
-  schema_data = load_schema()
+  schema_data = load_erd_schema()
 
   try:
     jsonschema.validate(instance=yaml_to_validate, schema=schema_data)
@@ -113,6 +114,8 @@ def validate_schema(yaml_to_validate):
   except jsonschema.exceptions.ValidationError as e:
     # Failure
     valid = False
+    # TODO: improve validation error reporting
+    # pprint(str(e))
     validation_errors.append(e)
 
   errors_entities = validate_entities(yaml_to_validate)
@@ -126,6 +129,30 @@ def validate_schema(yaml_to_validate):
   if len(errors_relationships):  # list not empty
     valid = False
     validation_errors = validation_errors + errors_relationships
+
+  return (valid, validation_errors)
+
+
+def load_style_schema():
+  with importlib.resources.open_text('erd_yaml2dot.resources.styles', 'style_schema.yaml') as file:
+    return yaml.safe_load(file)
+
+
+def validate_style_schema(yaml_to_validate):
+  valid = True
+  validation_errors = []
+
+  schema_data = load_style_schema()
+
+  try:
+    jsonschema.validate(instance=yaml_to_validate, schema=schema_data)
+    # Success
+  except jsonschema.exceptions.ValidationError as e:
+    # Failure
+    valid = False
+    # TODO: improve validation error reporting
+    # pprint(str(e))
+    validation_errors.append(e)
 
   return (valid, validation_errors)
 

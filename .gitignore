@@ -170,3 +170,5 @@ poetry.lock
 *.svg
 *.png
 *.pdf
+*.gv
+*.dot

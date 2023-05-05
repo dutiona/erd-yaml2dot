@@ -23,17 +23,23 @@ style:
     field:
       extends: .default-style
       align: "left"
+    primary_key:
+      extends: .default-style
+      align: "left"
+      bold: true
 
   relationship:
     extends: .default-style
     shape: "oval"
     fillcolor: "grey80"
+    bgcolor: "grey80"
     title:
       extends: .default-style
+      bgcolor: "grey80"
       bold: true
     field:
       extends: .default-style
-      bgcolor: "grey95"
+      bgcolor: "grey80"
     note:
       extends: .default-style
       bgcolor: "none"

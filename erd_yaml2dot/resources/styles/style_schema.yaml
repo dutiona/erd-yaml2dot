@@ -31,6 +31,12 @@ properties:
               - properties:
                   extends:
                     type: string
+          primary_key:
+            allOf:
+              - $ref: "#/definitions/style-properties"
+              - properties:
+                  extends:
+                    type: string
       relationship:
         type: object
         allOf:

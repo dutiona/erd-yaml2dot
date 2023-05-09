@@ -18,7 +18,7 @@ def parse_card(card_str):
   }
 
 
-def convert_yaml_to_dot(erd_yaml_data, layout, style_yaml_data, html=True):
+def convert_yaml_to_dot(erd_yaml_data, layout, style, html=True):
   graph = graphviz.Digraph(name="ER",
                            engine=layout,
                            renderer="cairo",
@@ -32,7 +32,7 @@ def convert_yaml_to_dot(erd_yaml_data, layout, style_yaml_data, html=True):
 
   # entities
   graph.attr('node',
-             shape=style_yaml_data['entity']['shape'],
+             shape=style.get('entity', 'shape'),
              fontname=style_yaml_data['entity']['fontname'],
              fontsize=str(style_yaml_data['entity']['fontsize']),
              fillcolor=style_yaml_data['entity']['fillcolor'],

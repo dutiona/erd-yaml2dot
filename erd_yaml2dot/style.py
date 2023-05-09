@@ -63,7 +63,7 @@ class Style:
     style_yaml_data = self._load(file_stream)
     self._validate(style_yaml_data)
 
-    self._parse(style_yaml_data)
+    self.data = style_yaml_data
 
   def _load(self, fp):
     yaml_data = load_yaml_file(fp)
@@ -125,10 +125,7 @@ class Style:
     if not valid:
       raise ValidationError(validation_errors)
 
-  def _parse(self, data):
-    return data
-
-  def get(self, entry=None, nested_entry=None, field=None):
+  def get(self, entry=None, field=None, nested_entry=None):
     assert not entry is None
     assert not field is None
 

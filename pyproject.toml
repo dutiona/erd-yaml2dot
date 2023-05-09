@@ -12,10 +12,10 @@ repository = "https://github.com/dutiona/erd-yaml2dot/"
 keywords = ["yaml", "dot", "erd", "graphviz"]
 packages = [{ include = "erd_yaml2dot" }]
 include = [
-  "erd_yaml2dot/resources/*.json",
-  "erd_yaml2dot/resources/*.yaml",
-  "tests/resources/*.json",
-  "tests/resources/*.yaml",
+  "erd_yaml2dot/resources/**/*.json",
+  "erd_yaml2dot/resources/**/*.yaml",
+  "tests/resources/**/*.json",
+  "tests/resources/**/*.yaml",
 ]
 
 [tool.poetry.dependencies]

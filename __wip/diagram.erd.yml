@@ -10,7 +10,7 @@ entities:
       - Amount
       - Owner
       - Comment
-    primary_key:
+    primary-key:
       - Item ID
 
   "Source":
@@ -19,7 +19,7 @@ entities:
       - Price
       - Homepage
       - Manufacturer
-    primary_key:
+    primary-key:
       - Source ID
 
   "Source2":
@@ -35,7 +35,7 @@ entities:
       - Name
       - Room
       - Locker
-    primary_key:
+    primary-key:
       - Location ID
 
   "Lending":
@@ -44,7 +44,7 @@ entities:
       - Borrowed by
       - Borrowed on
       - Returned on
-    primary_key:
+    primary-key:
       - Lending ID
 
   "Reminder":
@@ -58,7 +58,7 @@ entities:
       - Email
       - Phone
       - Message
-    primary_key:
+    primary-key:
       - Reminder ID
 
   "Attachment":
@@ -67,7 +67,7 @@ entities:
       - File
       - External URL
       - Private
-    primary_key:
+    primary-key:
       - Attachment ID
 
   "Book":
@@ -81,7 +81,7 @@ entities:
       - Review
       - Summary
       - About the Author
-    primary_key:
+    primary-key:
       - Book ID
 
   "Empty": {}

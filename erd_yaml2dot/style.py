@@ -125,7 +125,7 @@ class Style:
     if not valid:
       raise ValidationError(validation_errors)
 
-  def get(self, entry=None, field=None, nested_entry=None):
+  def get(self, field=None, entry=None, nested_entry=None):
     assert not entry is None
     assert not field is None
 

@@ -32,7 +32,7 @@ def convert_yaml_to_dot(erd_yaml_data, layout, style, html=True):
 
   # entities
   graph.attr('node',
-             shape=style.get('entity', 'shape'),
+             shape=style.get('shape', 'entity'),
              fontname=style_yaml_data['entity']['fontname'],
              fontsize=str(style_yaml_data['entity']['fontsize']),
              fillcolor=style_yaml_data['entity']['fillcolor'],

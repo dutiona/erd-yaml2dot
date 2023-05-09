@@ -2,7 +2,7 @@ $schema: "https://json-schema.org/draft/2020-12/schema"
 
 # This schema does not validate:
 #  - in entities:
-#    - that the fields in primary_key is properly declared (in fields)
+#    - that the fields in primary-key is properly declared (in fields)
 #    - fields name are unique
 #  - in relationships:
 #    - that the entities referenced in relationships exists in entities
@@ -25,13 +25,13 @@ properties:
           type: array
           items:
             type: string
-        primary_key:
+        primary-key:
           type: array
           items:
             type: string
       required: []
       dependencies:
-        primary_key:
+        primary-key:
           properties:
             fields:
               minItems: 1

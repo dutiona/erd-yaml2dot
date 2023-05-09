@@ -1,46 +1,82 @@
-name: "Default" # Grey
+name: "Default" # gray
 
-.default-style:
-  shape: "box"
-  fontsize: 12
-  fontname: "Courier"
-  align: "center"
-  color: "black"
-  style: "filled"
-  fillcolor: "lightgrey"
-  bold: false
-  underlined: false
-  italic: false
+.base-style:
+  shape:
+    shape-type: "box"
+    style: "filled"
+    fillcolor: "lightgray"
+  text:
+    fontsize: 12
+    fontname: "Courier"
+    align: "center"
+    color: "black"
+    bgcolor: "lightgray"
+    bold: false
+    underlined: false
+    italic: false
 
-style:
+.entity-base:
+  extends: .base-style
+
+.entity-title:
+  extends: .entity-base/text
+  bgcolor: "darkgray"
+  bold: true
+  underlined: true
+
+.entity-field:
+  extends: .entity-base/text
+  align: "left"
+  fontsize: 10
+
+.entity-primary-key:
+  extends: .entity-base/text
+  align: "left"
+  bold: true
+
+.relationship-base:
+  extends: .base-style
+  shape:
+    shape-type: "oval"
+    fillcolor: "gray80"
+  text:
+    bgcolor: "gray80"
+
+.relationship-title:
+  extends: .relationship-base/text
+  bold: true
+
+.relationship-field:
+  extends: .relationship-base/text
+  fontsize: 10
+
+.relationship-note:
+  extends: .relationship-base/text
+  bgcolor: "none"
+  italic: true
+
+.relationship-cluster:
+  extends: .relationship-base/shape
+  shape-type: "polygon"
+  style: "none"
+
+style-sheet:
   entity:
-    extends: .default-style
+    extends: .entity-base/shape
     title:
-      extends: .default-style
-      bgcolor: "darkgrey"
-      bold: true
-      underlined: true
+      extends: .entity-title
     field:
-      extends: .default-style
-      align: "left"
-    primary_key:
-      extends: .default-style
-      align: "left"
-      bold: true
+      extends: .entity-field
+    primary-key:
+      extends: .entity-primary-key
 
   relationship:
-    extends: .default-style
-    shape: "oval"
-    fillcolor: "grey80"
-    bgcolor: "grey80"
+    extends: .relationship-base/shape
     title:
-      extends: .default-style
-      bgcolor: "grey80"
-      bold: true
+      extends: .relationship-title
     field:
-      extends: .default-style
-      bgcolor: "grey80"
+      extends: .relationship-field
     note:
-      extends: .default-style
-      bgcolor: "none"
-      italic: false
+      extends: .relationship-note
+    cluster:
+      extends: .relationship-cluster

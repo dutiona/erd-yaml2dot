@@ -1,60 +1,10 @@
 import yaml
-import sys
 import re
-import importlib.resources
 import graphviz
-from erd_yaml2dot.validate import validate_erd_schema, validate_style_schema
+from erd_yaml2dot.validate import validate_erd_schema
 from erd_yaml2dot.format import format_label_entity_for_dot_html, format_label_relationship_for_dot_html, format_card
-from pprint import pprint
-
-
-def eprint(*args, **kwargs):
-  print(*args, file=sys.stderr, **kwargs)
-  error = True
-
-
-def load_yaml_file(file_stream):
-  return yaml.safe_load(file_stream)
-
-
-def merge_dict(input, override):
-  ret = input.copy()
-  for k, v in override.items():
-    ret[k] = v
-  return ret
-
-
-def expand_style_yaml_data(yaml_data):
-
-  yaml_proper = {}
-  yaml_proper['name'] = yaml_data['name']
-  yaml_proper['style'] = {}
-
-  styles_to_expand = {}
-  for style_name, style_content in yaml_data.items():
-    if style_name.startswith("."):
-      styles_to_expand[style_name] = style_content
-
-  # unpack style for entity and relationships
-  for rule_name, rule_content in yaml_data['style'].items():
-    if rule_name in ['entity', 'relationship'] and 'extends' in rule_content:
-      style_to_override = rule_content.pop('extends')
-      rule_content = merge_dict(styles_to_expand[style_to_override], rule_content)
-      yaml_proper['style'][rule_name] = rule_content
-
-    # for nested title, fields, note
-    for nested_rule_name, nested_rule_content in rule_content.items():
-      if nested_rule_name in ['title', 'field', 'note', 'primary_key'] and 'extends' in nested_rule_content:
-        style_to_override = nested_rule_content.pop('extends')
-        nested_rule_content = merge_dict(styles_to_expand[style_to_override], nested_rule_content)
-        rule_content[nested_rule_name] = nested_rule_content
-    yaml_proper['style'][rule_name] = rule_content
-
-  return yaml_proper
-
-
-def load_style(file_stream):
-  return expand_style_yaml_data(load_yaml_file(file_stream))
+from erd_yaml2dot.style import Style
+from erd_yaml2dot.utility import load_yaml_file, eprint
 
 
 def parse_card(card_str):
@@ -146,14 +96,7 @@ def validate_and_convert_yaml_to_dot(input_stream, style_stream, layout="dot", h
     eprint("\n".join(validation_errors))
     return None
 
-  style_yaml_data = load_style(style_stream)
-  valid, validation_errors = validate_style_schema(style_yaml_data)
-
-  if not valid:
-    eprint("\n".join(validation_errors))
-    return None
-
-  return convert_yaml_to_dot(erd_yaml_data, layout, style_yaml_data['style'], html=html)
+  return convert_yaml_to_dot(erd_yaml_data, layout, Style(style_stream), html=html)
 
 
 def render_graph(graph, basename, format=('png', 'svg', 'pdf')):

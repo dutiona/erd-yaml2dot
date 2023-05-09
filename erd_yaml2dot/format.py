@@ -35,7 +35,7 @@ def format_label_entity_for_dot_text(entity_name, entity_content):
   dashes = '-' * (max_size + 2)
   label = '{}\\n{}\\n'.format(entity_name, dashes)
   for field in entity_content['fields']:
-    if 'primary_key' in entity_content and field in entity_content['primary_key']:
+    if 'primary-key' in entity_content and field in entity_content['primary-key']:
       label += '*{}*\\n'.format(field)
     else:
       label += '{}\\n'.format(field)
@@ -62,8 +62,8 @@ def format_label_entity_for_dot_html(entity_name, entity_content, style):
   label += "      <tr>{}</tr>\n".format(format_text_data_html(entity_name, style['title']))
   if 'fields' in entity_content:
     for field in entity_content['fields']:
-      if 'primary_key' in entity_content and field in entity_content['primary_key']:
-        label += "      <tr>{}</tr>\n".format(format_text_data_html(field, style['primary_key']))
+      if 'primary-key' in entity_content and field in entity_content['primary-key']:
+        label += "      <tr>{}</tr>\n".format(format_text_data_html(field, style['primary-key']))
       else:
         label += "      <tr>{}</tr>\n".format(format_text_data_html(field, style['field']))
   label += "    </table>"

@@ -1,23 +1,23 @@
 import yaml
 import jsonschema
 import importlib.resources
-# from pprint import pprint
+from erd_yaml2dot.utility import eprint  # , save_yaml_file
 
 
 def load_erd_schema():
-  with importlib.resources.open_text('erd_yaml2dot.resources', 'erd_schema.yaml') as file:
+  with importlib.resources.open_text('erd_yaml2dot.resources.schemas', 'erd_schema.yaml') as file:
     return yaml.safe_load(file)
 
 
 def validate_entities(yaml_to_validate):
   # 2 constraints are not checked with the schema (limitations):
-  #   - the fields in primary_key is properly declared (in fields)
+  #   - the fields in primary-key is properly declared (in fields)
   #   - fields name are unique
 
   validation_errors = []
 
   entities = yaml_to_validate['entities']
-  known_entities_fields = ['fields', 'primary_key']
+  known_entities_fields = ['fields', 'primary-key']
 
   for entity_name, entity_content in entities.items():
     for k in entity_content.keys():
@@ -37,10 +37,10 @@ def validate_entities(yaml_to_validate):
 
   for entity_name, entity_content in entities.items():
     # Check that field exists if primary key exist
-    if 'primary_keys' in entity_content and not 'fields' in entity_content:
+    if 'primary-keys' in entity_content and not 'fields' in entity_content:
       validation_errors.append(
-          "ERROR: In entity <{}> primary_key is declared with no fields.".format(entity_name))
-      print("ERROR: In entity <{}> primary_key is declared with no fields.".format(entity_name))
+          "ERROR: In entity <{}> primary-key is declared with no fields.".format(entity_name))
+      print("ERROR: In entity <{}> primary-key is declared with no fields.".format(entity_name))
 
     # Check unique field names
     if 'fields' in entity_content:
@@ -54,8 +54,8 @@ def validate_entities(yaml_to_validate):
                 .format(entity_name, field, nb))
 
     # Check that primary key exists in fields
-    if 'primary_keys' in entity_content and 'fields' in entity_content:
-      for pk_field in entity_content['primary_key']:
+    if 'primary-key' in entity_content and 'fields' in entity_content:
+      for pk_field in entity_content['primary-key']:
         if not pk_field in entity_content['fields']:
           validation_errors.append(
             "ERROR: In entity <{}> primary key <{}> is not a field declared in fields (existing fields: <{}>)."
@@ -108,21 +108,20 @@ def validate_erd_schema(yaml_to_validate):
 
   schema_data = load_erd_schema()
 
+  # with open("./test_diagram_bis.yaml", "w") as fp:
+  #   save_yaml_file(yaml_to_validate, fp)
+
   try:
     jsonschema.validate(instance=yaml_to_validate, schema=schema_data)
     # Success
   except jsonschema.exceptions.ValidationError as e:
     # Failure
     valid = False
-    # TODO: improve validation error reporting
-    # pprint(str(e))
     validation_errors.append(e)
 
   errors_entities = validate_entities(yaml_to_validate)
   if len(errors_entities) > 0:   # list not empty
     valid = False
-    print("ERROR ENTITIES:\n")
-    print(errors_entities)
     validation_errors = validation_errors + errors_entities
 
   errors_relationships = validate_relationships(yaml_to_validate)
@@ -134,7 +133,7 @@ def validate_erd_schema(yaml_to_validate):
 
 
 def load_style_schema():
-  with importlib.resources.open_text('erd_yaml2dot.resources.styles', 'style_schema.yaml') as file:
+  with importlib.resources.open_text('erd_yaml2dot.resources.schemas', 'style_schema.yaml') as file:
     return yaml.safe_load(file)
 
 
@@ -150,16 +149,9 @@ def validate_style_schema(yaml_to_validate):
   except jsonschema.exceptions.ValidationError as e:
     # Failure
     valid = False
-    # TODO: improve validation error reporting
-    # pprint(str(e))
     validation_errors.append(e)
+  except jsonschema.exceptions.SchemaError as e:
+    eprint("".join(str(e)))
+    raise e
 
   return (valid, validation_errors)
-
-
-def main():
-  pass
-
-
-if __name__ == "__main__":
-  main()

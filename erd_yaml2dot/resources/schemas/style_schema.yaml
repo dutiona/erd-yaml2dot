@@ -1,0 +1,118 @@
+$schema: "http://json-schema.org/draft-07/schema#"
+
+type: object
+properties:
+  name:
+    type: string
+  .base-style:
+    type: object
+    properties:
+      shape:
+        $ref: "#/definitions/shape-properties"
+      text:
+        $ref: "#/definitions/text-properties"
+  style-sheet:
+    type: object
+    properties:
+      entity:
+        allOf:
+          - $ref: "#/definitions/shape-properties"
+          - properties:
+              extends:
+                type: string
+              title:
+                allOf:
+                  - $ref: "#/definitions/text-properties"
+                  - properties:
+                      extends:
+                        type: string
+              field:
+                allOf:
+                  - $ref: "#/definitions/text-properties"
+                  - properties:
+                      extends:
+                        type: string
+              primary-key:
+                allOf:
+                  - $ref: "#/definitions/text-properties"
+                  - properties:
+                      extends:
+                        type: string
+      relationship:
+        allOf:
+          - $ref: "#/definitions/shape-properties"
+          - properties:
+              extends:
+                type: string
+              title:
+                allOf:
+                  - $ref: "#/definitions/text-properties"
+                  - properties:
+                      extends:
+                        type: string
+              field:
+                allOf:
+                  - $ref: "#/definitions/text-properties"
+                  - properties:
+                      extends:
+                        type: string
+              note:
+                allOf:
+                  - $ref: "#/definitions/text-properties"
+                  - properties:
+                      extends:
+                        type: string
+              cluster:
+                allOf:
+                  - $ref: "#/definitions/shape-properties"
+                  - properties:
+                      extends:
+                        type: string
+required:
+  - name
+  - .base-style
+  - style-sheet
+
+definitions:
+  shape-properties:
+    type: object
+    properties:
+      shape-type:
+        type: string
+      style:
+        type: string
+      fillcolor:
+        type: string
+    required:
+      - shape-type
+      - style
+      - fillcolor
+
+  text-properties:
+    type: object
+    properties:
+      fontsize:
+        type: integer
+      fontname:
+        type: string
+      align:
+        type: string
+      color:
+        type: string
+      bgcolor:
+        type: string
+      bold:
+        type: boolean
+      underlined:
+        type: boolean
+      italic:
+        type: boolean
+    required:
+      - fontsize
+      - fontname
+      - align
+      - color
+      - bgcolor
+      - bold
+      - underlined
+      - italic

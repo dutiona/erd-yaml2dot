@@ -19,6 +19,7 @@ entities:
       - field1
 
   "Entity4":
+    weak: true
     fields:
       - field1
     primary-key:
@@ -32,7 +33,7 @@ relationships:
       "Entity3": 0,*
     fields:
       - field 1
-    note:
+    notes:
       - note 1
 
   "relationship2":

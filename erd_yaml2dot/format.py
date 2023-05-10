@@ -57,15 +57,16 @@ def format_label_relationship_for_dot_text(relationship_name, relationship_conte
   return label
 
 
-def format_label_entity_for_dot_html(entity_name, entity_content, style):
+def format_label_entity_for_dot_html(entity_name, entity_content, style, weak=False):
+  prefix = "entity-weak" if weak else "entity"
   label = "    <table border='0' cellborder='0' cellspacing='0'>\n"
-  label += "      <tr>{}</tr>\n".format(format_text_data_html(entity_name, style.get('entity/title')))
+  label += "      <tr>{}</tr>\n".format(format_text_data_html(entity_name, style.get(prefix + '/title')))
   if 'fields' in entity_content:
     for field in entity_content['fields']:
       if 'primary-key' in entity_content and field in entity_content['primary-key']:
-        label += "      <tr>{}</tr>\n".format(format_text_data_html(field, style.get('entity/primary-key')))
+        label += "      <tr>{}</tr>\n".format(format_text_data_html(field, style.get(prefix + '/primary-key')))
       else:
-        label += "      <tr>{}</tr>\n".format(format_text_data_html(field, style.get('entity/field')))
+        label += "      <tr>{}</tr>\n".format(format_text_data_html(field, style.get(prefix + '/field')))
   label += "    </table>"
 
   return label
@@ -77,6 +78,14 @@ def format_label_relationship_for_dot_html(relationship_name, relationship_conte
   if 'fields' in relationship_content:
     for field in relationship_content['fields']:
       label += "      <tr>{}</tr>\n".format(format_text_data_html(field, style.get('relationship/field')))
+  label += "    </table>"
+
+  return label
+
+
+def format_label_relationship_note_for_dot_html(relationship_name, note, style):
+  label = "    <table border='0' cellborder='0' cellspacing='0'>\n"
+  label += "      <tr>{}</tr>\n".format(format_text_data_html(note, style.get('relationship/note/text')))
   label += "    </table>"
 
   return label

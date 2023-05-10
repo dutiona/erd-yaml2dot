@@ -34,6 +34,27 @@ name: "Default" # gray
   align: "left"
   bold: true
 
+.entity-weak-base:
+  extends: .entity-base
+  shape:
+    style: "filled,dashed"
+
+.entity-weak-title:
+  extends: .entity-weak-base/text
+  bgcolor: "darkgray"
+  bold: true
+  underlined: true
+
+.entity-weak-field:
+  extends: .entity-weak-base/text
+  align: "left"
+  fontsize: 10
+
+.entity-weak-primary-key:
+  extends: .entity-weak-base/text
+  align: "left"
+  bold: true
+
 .relationship-base:
   extends: .base-style
   shape:
@@ -51,9 +72,14 @@ name: "Default" # gray
   fontsize: 10
 
 .relationship-note:
-  extends: .relationship-base/text
-  bgcolor: "none"
-  italic: true
+  extends: .relationship-base
+  shape:
+    shape-type: "box"
+    style: "dashed"
+    fillcolor: "none"
+  text:
+    bgcolor: "none"
+    italic: true
 
 .relationship-cluster:
   extends: .relationship-base/shape
@@ -69,6 +95,15 @@ style-sheet:
       extends: .entity-field
     primary-key:
       extends: .entity-primary-key
+
+  entity-weak:
+    extends: .entity-weak-base/shape
+    title:
+      extends: .entity-weak-title
+    field:
+      extends: .entity-weak-field
+    primary-key:
+      extends: .entity-weak-primary-key
 
   relationship:
     extends: .relationship-base/shape

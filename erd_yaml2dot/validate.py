@@ -13,11 +13,12 @@ def validate_entities(yaml_to_validate):
   # 2 constraints are not checked with the schema (limitations):
   #   - the fields in primary-key is properly declared (in fields)
   #   - fields name are unique
+  #   - a weak entity is required to be in a relationship with a non-weak (strong) entity.
 
   validation_errors = []
 
   entities = yaml_to_validate['entities']
-  known_entities_fields = ['fields', 'primary-key']
+  known_entities_fields = ['fields', 'primary-key', 'weak']
 
   for entity_name, entity_content in entities.items():
     for k in entity_content.keys():
@@ -32,15 +33,12 @@ def validate_entities(yaml_to_validate):
           validation_errors.append(
             "ERROR: In entity <{}> duplicate field named <{}> ({}). Fields must have a unique name."
               .format(entity_name, field, nb))
-          print("ERROR: In entity <{}> duplicate field named <{}> ({}). Fields must have a unique name."
-                .format(entity_name, field, nb))
 
   for entity_name, entity_content in entities.items():
     # Check that field exists if primary key exist
     if 'primary-keys' in entity_content and not 'fields' in entity_content:
       validation_errors.append(
           "ERROR: In entity <{}> primary-key is declared with no fields.".format(entity_name))
-      print("ERROR: In entity <{}> primary-key is declared with no fields.".format(entity_name))
 
     # Check unique field names
     if 'fields' in entity_content:
@@ -50,8 +48,6 @@ def validate_entities(yaml_to_validate):
           validation_errors.append(
             "ERROR: In entity <{}> duplicate field named <{}> ({}). Fields must have a unique name."
               .format(entity_name, field, nb))
-          print("ERROR: In entity <{}> duplicate field named <{}> ({}). Fields must have a unique name."
-                .format(entity_name, field, nb))
 
     # Check that primary key exists in fields
     if 'primary-key' in entity_content and 'fields' in entity_content:
@@ -60,8 +56,17 @@ def validate_entities(yaml_to_validate):
           validation_errors.append(
             "ERROR: In entity <{}> primary key <{}> is not a field declared in fields (existing fields: <{}>)."
               .format(entity_name, pk_field, entity_content['fields']))
-          print("ERROR: In entity <{}> primary key <{}> is not a field declared in fields (existing fields: <{}>)."
-                .format(entity_name, pk_field, entity_content['fields']))
+
+    # Check if the weak entity is associated with at least one strong entity
+    if 'weak' in entity_content and entity_content['weak']:
+      for relationship_name, relationship_content in yaml_to_validate['relationships'].items():
+        if 'entities' in relationship_content and entity_name in relationship_content['entities']:
+          linked_entities = [linked_e for linked_e in relationship_content['entities'].keys() if linked_e in entities]
+          if not any([not ('weak' in entities[linked_e] and not entities[linked_e]['weak']) for linked_e in linked_entities]):
+            validation_errors.append(
+                "ERROR: The *weak* entity <{}> is not in a relationship with at least one non-weak (strong) entity."
+                "In a relationship with <{}>"
+                .format(entity_name, linked_entities))
 
   return validation_errors
 
@@ -74,7 +79,7 @@ def validate_relationships(yaml_to_validate):
 
   entities = yaml_to_validate['entities']
   relationships = yaml_to_validate['relationships']
-  relationships_known_fields = ['entities', 'fields', 'note']
+  relationships_known_fields = ['entities', 'fields', 'notes']
 
   for relationship_name, relationship_content in relationships.items():
     for k in relationship_content.keys():

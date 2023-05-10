@@ -90,7 +90,7 @@ class Style:
     # unpack style for entity and relationships
     cur_style = yaml_data['style-sheet']
     for rule_name, rule_content in cur_style.items():
-      if rule_name in ['entity', 'relationship'] and 'extends' in rule_content:
+      if rule_name in ['entity', 'entity-weak', 'relationship'] and 'extends' in rule_content:
         base_dict_to_override = parse_expand_pattern(rule_content.pop('extends'), parent={})(styles_to_expand)
         if not base_dict_to_override is None:
           rule_content = merge_dict_recur(input=base_dict_to_override, override=rule_content)
@@ -126,11 +126,7 @@ class Style:
       raise ValidationError(validation_errors)
 
   def get(self, path):
-    base_style = self._data['style-sheet']
-    pprint(base_style)
-    acc = unstack_accessor_recur(lambda x: x, path, path.split("/"))
-    
-    return acc(base_style)
+    return unstack_accessor_recur(lambda x: x, path, path.split("/"))(self._data['style-sheet'])
 
 # def test():
 #

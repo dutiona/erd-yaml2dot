@@ -38,6 +38,30 @@ properties:
                   - properties:
                       extends:
                         type: string
+      entity-weak:
+        allOf:
+          - $ref: "#/definitions/shape-properties"
+          - properties:
+              extends:
+                type: string
+              title:
+                allOf:
+                  - $ref: "#/definitions/text-properties"
+                  - properties:
+                      extends:
+                        type: string
+              field:
+                allOf:
+                  - $ref: "#/definitions/text-properties"
+                  - properties:
+                      extends:
+                        type: string
+              primary-key:
+                allOf:
+                  - $ref: "#/definitions/text-properties"
+                  - properties:
+                      extends:
+                        type: string
       relationship:
         allOf:
           - $ref: "#/definitions/shape-properties"
@@ -57,11 +81,20 @@ properties:
                       extends:
                         type: string
               note:
-                allOf:
-                  - $ref: "#/definitions/text-properties"
-                  - properties:
-                      extends:
-                        type: string
+                type: object
+                properties:
+                  shape:
+                    allOf:
+                      - $ref: "#/definitions/shape-properties"
+                      - properties:
+                          extends:
+                            type: string
+                  text:
+                    allOf:
+                      - $ref: "#/definitions/text-properties"
+                      - properties:
+                          extends:
+                            type: string
               cluster:
                 allOf:
                   - $ref: "#/definitions/shape-properties"

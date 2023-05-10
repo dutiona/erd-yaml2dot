@@ -55,7 +55,7 @@ def parse_expand_pattern(expand_pattern, parent):
   path_in_style = m.group(2)
   if path_in_style is not None:
     path += path_in_style.split("/")[1:]
-  return unstack_accessor_recur(lambda x: x, path, path)
+  return unstack_accessor_recur(lambda x: x, expand_pattern, path)
 
 
 class Style:
@@ -63,7 +63,7 @@ class Style:
     style_yaml_data = self._load(file_stream)
     self._validate(style_yaml_data)
 
-    self.data = style_yaml_data
+    self._data = style_yaml_data
 
   def _load(self, fp):
     yaml_data = load_yaml_file(fp)
@@ -125,15 +125,12 @@ class Style:
     if not valid:
       raise ValidationError(validation_errors)
 
-  def get(self, field=None, entry=None, nested_entry=None):
-    assert not entry is None
-    assert not field is None
-
-    if not nested_entry is None:
-      return self.data[entry][nested_entry][field]
-    else:
-      return self.data[entry][field]
-
+  def get(self, path):
+    base_style = self._data['style-sheet']
+    pprint(base_style)
+    acc = unstack_accessor_recur(lambda x: x, path, path.split("/"))
+    
+    return acc(base_style)
 
 # def test():
 #

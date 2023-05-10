@@ -10,7 +10,7 @@ def format_card(min, max):
 
 
 def format_text_data_html(text, style):
-  html = "<td bgcolor='{}' align='{}'>".format(style['fillcolor'], style['align'])
+  html = "<td bgcolor='{}' align='{}'>".format(style['bgcolor'], style['align'])
   html += "<font color='{}' face='{}' point-size='{}'>".format(style['color'], style['fontname'], style['fontsize'])
   if style['bold']:
     html += "<b>"
@@ -59,13 +59,13 @@ def format_label_relationship_for_dot_text(relationship_name, relationship_conte
 
 def format_label_entity_for_dot_html(entity_name, entity_content, style):
   label = "    <table border='0' cellborder='0' cellspacing='0'>\n"
-  label += "      <tr>{}</tr>\n".format(format_text_data_html(entity_name, style['title']))
+  label += "      <tr>{}</tr>\n".format(format_text_data_html(entity_name, style.get('entity/title')))
   if 'fields' in entity_content:
     for field in entity_content['fields']:
       if 'primary-key' in entity_content and field in entity_content['primary-key']:
-        label += "      <tr>{}</tr>\n".format(format_text_data_html(field, style['primary-key']))
+        label += "      <tr>{}</tr>\n".format(format_text_data_html(field, style.get('entity/primary-key')))
       else:
-        label += "      <tr>{}</tr>\n".format(format_text_data_html(field, style['field']))
+        label += "      <tr>{}</tr>\n".format(format_text_data_html(field, style.get('entity/field')))
   label += "    </table>"
 
   return label
@@ -73,10 +73,10 @@ def format_label_entity_for_dot_html(entity_name, entity_content, style):
 
 def format_label_relationship_for_dot_html(relationship_name, relationship_content, style):
   label = "    <table border='0' cellborder='0' cellspacing='0'>\n"
-  label += "      <tr>{}</tr>\n".format(format_text_data_html(relationship_name, style['title']))
+  label += "      <tr>{}</tr>\n".format(format_text_data_html(relationship_name, style.get('relationship/title')))
   if 'fields' in relationship_content:
     for field in relationship_content['fields']:
-      label += "      <tr>{}</tr>\n".format(format_text_data_html(field, style['field']))
+      label += "      <tr>{}</tr>\n".format(format_text_data_html(field, style.get('relationship/field')))
   label += "    </table>"
 
   return label

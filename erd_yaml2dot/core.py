@@ -32,32 +32,31 @@ def convert_yaml_to_dot(erd_yaml_data, layout, style, html=True):
 
   # entities
   graph.attr('node',
-             shape=style.get('shape', 'entity'),
-             fontname=style_yaml_data['entity']['fontname'],
-             fontsize=str(style_yaml_data['entity']['fontsize']),
-             fillcolor=style_yaml_data['entity']['fillcolor'],
-             style=style_yaml_data['entity']['style'])
+             shape=style.get('entity/shape-type'),
+             fontname=style.get('entity/field/fontname'),
+             fontsize=str(style.get('entity/field/fontsize')),
+             fillcolor=style.get('entity/fillcolor'),
+             style=style.get('entity/style'))
 
   for entity_name, entity_content in erd_yaml_data['entities'].items():
     graph.node(entity_name, label="<\n{}\n>".format(format_label_entity_for_dot_html(
-      entity_name, entity_content, style_yaml_data['entity'])))
+      entity_name, entity_content, style)))
 
   # relationships
   graph.attr('node',
-             shape=style_yaml_data['relationship']['shape'],
-             fontname=style_yaml_data['relationship']['fontname'],
-             fontsize=str(style_yaml_data['relationship']['fontsize']),
-             fillcolor=style_yaml_data['relationship']['fillcolor'],
-             style=style_yaml_data['relationship']['style'])
+             shape=style.get('relationship/shape-type'),
+             fontname=style.get('relationship/field/fontname'),
+             fontsize=str(style.get('relationship/field/fontsize')),
+             fillcolor=style.get('relationship/fillcolor'),
+             style=style.get('relationship/style'))
   graph.attr('edge',
-             fontname=style_yaml_data['relationship']['fontname'],
-             fontsize=str(style_yaml_data['relationship']['fontsize']),
-             color=style_yaml_data['relationship']['color']
-             )
+             fontname=style.get('relationship/field/fontname'),
+             fontsize=str(style.get('relationship/field/fontsize')),
+             color=style.get('relationship/field/color'))
 
   for relationship_name, relationship_content in erd_yaml_data['relationships'].items():
     graph.node(relationship_name, label="<\n{}\n>".format(format_label_relationship_for_dot_html(
-      relationship_name, relationship_content, style_yaml_data['relationship'])))
+      relationship_name, relationship_content, style)))
 
   for relationship_name, relationship_content in erd_yaml_data['relationships'].items():
       # switch case for self relationships

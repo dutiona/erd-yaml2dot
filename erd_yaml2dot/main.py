@@ -5,10 +5,10 @@ from erd_yaml2dot.core import validate_and_convert_yaml_to_dot, render_graph
 
 
 def main():
-  import platform
-  if platform.system() == "Windows":
-    import os
-    os.environ["PATH"] += os.pathsep + 'C:/Program Files/Graphviz/bin'
+  # import platform
+  # if platform.system() == "Windows":
+  #   import os
+  #   os.environ["PATH"] += os.pathsep + 'C:/Program Files/Graphviz/bin'
 
   parser = argparse.ArgumentParser(
       description="Transform a well-formed yaml file describing entities and relationships into a proper ER diagram with graphviz."
@@ -25,7 +25,15 @@ def main():
   parser.add_argument("-r", "--render",
                       help="The rendered files that will be generated (svg,pdf,png,...).",
                       default=("svg", "pdf", "png"))
+  parser.add_argument("-x", "--graphviz-bin-dir",
+                      help="Path to graphviz binary's directory."
+                           "Will be injected in the PATH. Mostly useful for windows.",
+                      default=None)
   args = parser.parse_args()
+  
+  if not args.graphviz_bin_dir is None:
+    import os
+    os.environ["PATH"] += os.pathsep + args.graphviz_bin_dir
 
   graph = validate_and_convert_yaml_to_dot(args.input, args.style, layout=args.layout)
   render_graph(graph, basename=args.name, format=args.render)

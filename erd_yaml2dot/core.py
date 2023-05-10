@@ -18,7 +18,7 @@ def parse_card(card_str):
   }
 
 
-def convert_yaml_to_dot(erd_yaml_data, layout, style, html=True):
+def convert_yaml_to_dot(erd_yaml_data, layout, style):
   graph = graphviz.Digraph(name="ER",
                            engine=layout,
                            renderer="cairo",
@@ -115,14 +115,14 @@ def convert_yaml_to_dot(erd_yaml_data, layout, style, html=True):
   return graph
 
 
-def validate_and_convert_yaml_to_dot(input_stream, style_stream, layout="dot", html=True):
+def validate_and_convert_yaml_to_dot(input_stream, style_stream, layout="dot"):
   erd_yaml_data = load_yaml_file(input_stream)
   valid, validation_errors = validate_erd_schema(erd_yaml_data)
   if not valid:
     eprint("\n".join(validation_errors))
     return None
 
-  return convert_yaml_to_dot(erd_yaml_data, layout, Style(style_stream), html=html)
+  return convert_yaml_to_dot(erd_yaml_data, layout, Style(style_stream))
 
 
 def render_graph(graph, basename, format=('png', 'svg', 'pdf')):

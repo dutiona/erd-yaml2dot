@@ -30,13 +30,22 @@ def main():
                            "Will be injected in the PATH. Mostly useful for windows.",
                       default=None)
   args = parser.parse_args()
-  
+
   if not args.graphviz_bin_dir is None:
     import os
     os.environ["PATH"] += os.pathsep + args.graphviz_bin_dir
 
   graph = validate_and_convert_yaml_to_dot(args.input, args.style, layout=args.layout)
   render_graph(graph, basename=args.name, format=args.render)
+
+  # TODO: write more tests
+  # TODO: cleanup code (refactoring of core)
+  # TODO: forward additional parameters from CLI to underlying graphviz engine using something like :
+  # parser.add_argument("extra_args", nargs=argparse.REMAINDER, help="Extra arguments for the Graphviz engine")
+  # extra_args_dict = {}
+  # for arg in args.extra_args:
+  #     key, value = arg.split("=")
+  #     extra_args_dict[key] = value
 
 
 if __name__ == '__main__':

@@ -112,6 +112,16 @@ class Style:
 
       cur_style[rule_name] = rule_content
 
+    # unpack style for clusters
+    for rule_name, rule_content in cur_style.items():
+      if rule_name in ['cluster'] and 'extends' in rule_content:
+        base_dict_to_override = parse_expand_pattern(rule_content.pop('extends'), parent={})(styles_to_expand)
+        if not base_dict_to_override is None:
+          rule_content = merge_dict_recur(input=base_dict_to_override, override=rule_content)
+        else:
+          rule_content = base_dict_to_override
+      cur_style[rule_name] = rule_content
+
     yaml_data = {
       **styles_to_expand,
       "style-sheet": cur_style,

@@ -83,9 +83,17 @@ def format_label_relationship_for_dot_html(relationship_name, relationship_conte
   return label
 
 
-def format_label_relationship_note_for_dot_html(relationship_name, note, style):
+def format_label_relationship_note_for_dot_html(note, style):
   label = "    <table border='0' cellborder='0' cellspacing='0'>\n"
   label += "      <tr>{}</tr>\n".format(format_text_data_html(note, style.get('relationship/note/text')))
+  label += "    </table>"
+
+  return label
+
+
+def format_label_cluster_for_dot_html(cluster_name, style):
+  label = "    <table border='0' cellborder='0' cellspacing='0'>\n"
+  label += "      <tr>{}</tr>\n".format(format_text_data_html(cluster_name, style.get('cluster')))
   label += "    </table>"
 
   return label

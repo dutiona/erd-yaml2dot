@@ -78,6 +78,7 @@ def validate_relationships(yaml_to_validate):
   validation_errors = []
 
   entities = yaml_to_validate['entities']
+  clusters = yaml_to_validate['clusters']
   relationships = yaml_to_validate['relationships']
   relationships_known_fields = ['entities', 'fields', 'notes']
 
@@ -89,8 +90,9 @@ def validate_relationships(yaml_to_validate):
 
     # Check that referenced entities do exist
     entities_name = list(entities.keys())
-    for entity in relationship_content['entities']:
-      if not entity in entities_name:
+    clusters_name = list(clusters.keys())
+    for entity in relationship_content['entities'].keys():
+      if not entity in [*entities_name, *clusters_name]:
         validation_errors.append(
             "ERROR: In relationship <{}> the entity named <{}> is not declared! (existing entities: <{}>)."
             .format(relationship_name, entity, entities_name))
@@ -103,6 +105,24 @@ def validate_relationships(yaml_to_validate):
           validation_errors.append(
             "ERROR: In relationship <{}> duplicate field named <{}> ({}). Fields must have a unique name."
               .format(relationship_name, field, nb))
+
+  return validation_errors
+
+
+def validate_clusters(yaml_to_validate):
+  validation_errors = []
+
+  if 'clusters' in yaml_to_validate:
+    entities = list(yaml_to_validate['entities'].keys())
+    relationships = list(yaml_to_validate['relationships'].keys())
+    all = entities + relationships
+
+    for cluster_name, cluster_content in yaml_to_validate['clusters'].items():
+      for elem in cluster_content:
+        if not elem in all:
+          validation_errors.append(
+            "ERROR: In cluster <{}>, element (entity or relationship) named <{}>  does not exist! "
+            "(Elements considered = <{}>).".format(cluster_name, elem, all))
 
   return validation_errors
 
@@ -133,6 +153,11 @@ def validate_erd_schema(yaml_to_validate):
   if len(errors_relationships):  # list not empty
     valid = False
     validation_errors = validation_errors + errors_relationships
+
+  errors_clusters = validate_clusters(yaml_to_validate)
+  if len(errors_clusters):  # list not empty
+    valid = False
+    validation_errors = validation_errors + errors_clusters
 
   return (valid, validation_errors)
 

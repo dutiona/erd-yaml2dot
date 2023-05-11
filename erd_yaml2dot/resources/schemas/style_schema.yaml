@@ -38,6 +38,12 @@ properties:
                   - properties:
                       extends:
                         type: string
+      cluster:
+        allOf:
+          - $ref: "#/definitions/text-properties"
+          - properties:
+              extends:
+                type: string
       entity-weak:
         allOf:
           - $ref: "#/definitions/shape-properties"

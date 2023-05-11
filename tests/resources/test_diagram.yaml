@@ -25,6 +25,16 @@ entities:
     primary-key:
       - field1
 
+clusters:
+  "meta-entity1":
+    - "Entity1"
+    - "Entity2"
+    - "relationship2"
+  "meta-entity2":
+    - "Entity3"
+    - "Entity4"
+    - "relationship3"
+
 relationships:
   "relationship 1":
     entities:
@@ -44,3 +54,18 @@ relationships:
     entities:
       "Entity3": 0,*
       "Entity4": 0,*
+
+  "relationship4":
+    entities:
+      "meta-entity1": 1,*
+      "Entity3": 1,1
+
+  "relationship5":
+    entities:
+      "meta-entity2": 0,*
+      "meta-entity1": 0,*
+    fields:
+      - field 0
+      - field N
+    notes:
+      - Cluster to cluster relationship \o/

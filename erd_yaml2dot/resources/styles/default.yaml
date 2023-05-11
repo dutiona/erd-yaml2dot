@@ -55,6 +55,13 @@ name: "Default" # gray
   align: "left"
   bold: true
 
+.cluster-base:
+  extends: .base-style/text
+  color: "black"
+  bgcolor: "white"
+  fontsize: 14
+  italic: true
+
 .relationship-base:
   extends: .base-style
   shape:
@@ -95,6 +102,9 @@ style-sheet:
       extends: .entity-field
     primary-key:
       extends: .entity-primary-key
+
+  cluster:
+    extends: .cluster-base
 
   entity-weak:
     extends: .entity-weak-base/shape

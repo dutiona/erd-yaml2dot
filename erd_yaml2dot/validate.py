@@ -78,7 +78,6 @@ def validate_relationships(yaml_to_validate):
   validation_errors = []
 
   entities = yaml_to_validate['entities']
-  clusters = yaml_to_validate['clusters']
   relationships = yaml_to_validate['relationships']
   relationships_known_fields = ['entities', 'fields', 'notes']
 
@@ -89,13 +88,15 @@ def validate_relationships(yaml_to_validate):
               .format(relationship_name, k))
 
     # Check that referenced entities do exist
-    entities_name = list(entities.keys())
-    clusters_name = list(clusters.keys())
-    for entity in relationship_content['entities'].keys():
-      if not entity in [*entities_name, *clusters_name]:
-        validation_errors.append(
-            "ERROR: In relationship <{}> the entity named <{}> is not declared! (existing entities: <{}>)."
-            .format(relationship_name, entity, entities_name))
+    if 'clusters' in yaml_to_validate:
+      clusters = yaml_to_validate['clusters']
+      entities_name = list(entities.keys())
+      clusters_name = list(clusters.keys())
+      for entity in relationship_content['entities'].keys():
+        if not entity in [*entities_name, *clusters_name]:
+          validation_errors.append(
+              "ERROR: In relationship <{}> the entity named <{}> is not declared! (existing entities: <{}>)."
+              .format(relationship_name, entity, entities_name))
 
     # Check that (optional) fields are uniques
     if 'fields' in relationship_content:

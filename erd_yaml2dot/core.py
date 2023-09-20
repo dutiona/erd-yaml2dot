@@ -157,6 +157,13 @@ def validate_and_convert_yaml_to_dot(input_stream, style_stream, layout="dot"):
   return convert_yaml_to_dot(erd_yaml_data, layout, Style(style_stream))
 
 
-def render_graph(graph, basename, format=('png', 'svg', 'pdf')):
+def render_graph(graph, basename, format=('png', 'svg', 'pdf', 'tex')):
   for f in format:
-    graph.render(format=f, outfile=basename + "." + f)
+    if f != 'tex':
+      graph.render(format=f, outfile=basename + "." + f)
+    else:
+      from dot2tex import dot2tex
+      tex_code = dot2tex(graph.source, format="pgf", crop=True)
+      # print(tex_code)
+      with open(basename + ".tex", "w") as fp:
+        fp.write(tex_code)

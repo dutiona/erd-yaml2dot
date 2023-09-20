@@ -23,8 +23,8 @@ def main():
                       default=importlib.resources.open_text("erd_yaml2dot.resources.styles", "default.yaml"))
   parser.add_argument("-l", "--layout", help="The layout to use to render the graph.", default="dot")
   parser.add_argument("-r", "--render",
-                      help="The rendered files that will be generated (svg,pdf,png,...).",
-                      default=("svg", "pdf", "png"))
+                      help="The rendered files that will be generated (svg,pdf,png,tex,...).",
+                      default=("svg", "pdf", "png", "tex"))
   parser.add_argument("-x", "--graphviz-bin-dir",
                       help="Path to graphviz binary's directory."
                            "Will be injected in the PATH. Mostly useful for windows.",
